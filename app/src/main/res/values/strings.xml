@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">BrownSugar</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string-array name="array_weeks">
+        <item>日</item>
+        <item>一</item>
+        <item>二</item>
+        <item>三</item>
+        <item>四</item>
+        <item>五</item>
+        <item>六</item>
+    </string-array>
+
+    <string-array name="array_op">
+        <item>正常</item>
+        <item>经期开始</item>
+        <item>经期结束</item>
+        <item>危险期</item>
+    </string-array>
+
+
+
+</resources>

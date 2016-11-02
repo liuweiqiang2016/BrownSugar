@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="darker_gray">#aaa</color>
+    <color name="white">#ffffffff</color>
+    <color name="black">#ff000000</color>
+    <color name="date_today">#33b5e5</color>
+    <color name="date_red">#ffff4444</color>
+    <color name="date_start">#ffff9800</color><!-- orange 500 -->
+    <color name="date_end">#ffaa66cc</color>
+
+
+    <color name="shadow">#cc222222</color>
+    <color name="perms_costs_money">#fff4511e</color>
+    <color name="user_icon_1">#ff00bcd4</color><!-- teal 500 -->
+    <color name="user_icon_2">#ff3f51b5</color><!-- indigo 500 -->
+    <color name="user_icon_3">#ff4285f4</color><!-- blue 500 -->
+    <color name="user_icon_4">#ffe91e63</color><!-- pink 500 -->
+    <color name="user_icon_5">#ff0f9d58</color><!-- green 500 -->
+    <color name="user_icon_6">#ff8bc34a</color><!-- light green 500 -->
+    <color name="user_icon_8">#ffff5722</color><!-- deep orange 500 -->
+
+    <color name="color_bg">#F2F2F2</color>
+</resources>
