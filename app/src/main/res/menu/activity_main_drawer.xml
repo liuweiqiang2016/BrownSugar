@@ -1,35 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
-    </group>
-
-    <item android:title="Communicate">
+    <item android:title="功能">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:id="@+id/nav_now"
+                android:checkable="true"
+                android:icon="@drawable/ic_assignment_blue_a400_48dp"
+                android:title="本月信息" />
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:id="@+id/nav_future"
+                android:checkable="true"
+                android:icon="@drawable/ic_trending_up_red_a200_48dp"
+                android:title="下月预测" />
+            <item
+                android:id="@+id/nav_history"
+                android:checkable="true"
+                android:icon="@drawable/ic_assessment_amber_700_48dp"
+                android:title="历史数据" />
+            <item
+                android:id="@+id/nav_note"
+                android:checkable="true"
+                android:icon="@drawable/ic_mode_edit_green_600_48dp"
+                android:title="我的笔记" />
+            <item
+                android:id="@+id/nav_note_query"
+                android:checkable="true"
+                android:icon="@drawable/ic_import_contacts_amber_700_48dp"
+                android:title="笔记查询" />
+            <item
+                android:id="@+id/nav_setting"
+                android:checkable="true"
+                android:icon="@drawable/ic_settings_blue_a400_48dp"
+                android:title="系统设置" />
+        </menu>
+    </item>
+    <item android:title="系统">
+        <menu>
+            <item
+                android:id="@+id/nav_update"
+                android:checkable="true"
+                android:icon="@drawable/ic_system_update_green_600_48dp"
+                android:title="版本更新" />
+            <item
+                android:id="@+id/nav_share"
+                android:checkable="true"
+                android:icon="@drawable/ic_share_red_a200_48dp"
+                android:title="分享" />
+            <item
+                android:id="@+id/nav_about"
+                android:checkable="true"
+                android:icon="@drawable/ic_help_outline_blue_a400_48dp"
+                android:title="关于" />
+            <item
+                android:id="@+id/nav_exit"
+                android:checkable="true"
+                android:icon="@drawable/ic_power_settings_new_red_a200_48dp"
+                android:title="退出" />
         </menu>
     </item>
 

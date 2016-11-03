@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">BrownSugar</string>
-    <string name="title_activity_main2">Main2Activity</string>
+    <string name="app_name">红糖</string>
+    <string name="title_activity_main">MainActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
