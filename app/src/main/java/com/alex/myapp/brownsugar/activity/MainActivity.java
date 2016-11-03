@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawer;
     private RecyclerView rv, rv_week;
     private HomeAdapter mAdapter;
-    private TextView tv_title, tv_cur, tv_ch, tv_state;
+    private TextView tv_title, tv_cur, tv_ch;
     private String title, strDate;
     private int year, month, day;
 
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity
         tv_title = (TextView) findViewById(R.id.home_title);
         tv_cur = (TextView) findViewById(R.id.home_tv_cur);
         tv_ch = (TextView) findViewById(R.id.home_tv_ch);
-        tv_state = (TextView) findViewById(R.id.home_tv_state);
+//        tv_state = (TextView) findViewById(R.id.home_tv_state);
 //        tv_forecast= (TextView) findViewById(R.id.home_tv_forecast);
 
         //绘制星期
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity
         if (model != null) {
             state = model.getState();
         }
-        tv_state.setText("状态:" + AppUtils.getOpState(this, state));
+//        tv_state.setText("状态:" + AppUtils.getOpState(this, state));
 //        tv_forecast.setText("预测:"+AppUtils.getForecastByState(state,model.getDate()));
 //        int curPos=0;
 //        for (int i = 0; i < list.size(); i++) {
@@ -295,11 +295,11 @@ public class MainActivity extends AppCompatActivity
                 int state=msg.arg2;
 //                mAdapter.upData(pos);
                 //如果标记是今天的数据，view更新
-                if (strDate.equals((String) (msg.obj))) {
-
-                    tv_state.setText("状态:" + AppUtils.getOpState(MainActivity.this,state));
-//                    tv_forecast.setText("预测:"+AppUtils.getForecastByState(state,list.get(pos).getDate()));
-                }
+//                if (strDate.equals((String) (msg.obj))) {
+//
+////                    tv_state.setText("状态:" + AppUtils.getOpState(MainActivity.this,state));
+////                    tv_forecast.setText("预测:"+AppUtils.getForecastByState(state,list.get(pos).getDate()));
+//                }
 
                 getForecastView(pos,state);
 

@@ -30,7 +30,7 @@ public class MarkDateFragment extends DialogFragment {
 
     TextView tv_time,tv_ch;
 //    String time,ch;
-    int pos;
+    int pos,state;
     Spinner sp;
     private static DateModel dateModel;
     private static Context mContext;
@@ -103,27 +103,7 @@ public class MarkDateFragment extends DialogFragment {
                             public void onClick(DialogInterface dialog, int id)
                             {
                                 //如果数据改动了：即当前position和进入前不同
-                                if (sp.getSelectedItemPosition()!=dateModel.getState()){
-
-                                    //不可标记危险期
-                                    if (sp.getSelectedItemPosition()==3){
-                                        AppUtils.showToast(getActivity(),"危险期不可标记!");
-                                        try
-                                        {
-                                            Field field = dialog.getClass()
-                                                    .getSuperclass().getDeclaredField(
-                                                            "mShowing" );
-                                            field.setAccessible( true );
-                                            // 将mShowing变量设为false，表示对话框已关闭
-                                            field.set(dialog, false );
-                                            dialog.dismiss();
-                                        }
-                                        catch (Exception e)
-                                        {
-                                            e.printStackTrace();
-                                        }
-                                    }else {
-
+                                if (sp.getSelectedItemPosition()!=state){
                                         MarkDateListener listener= (MarkDateListener) getActivity();
 //                                    listener.onMarkDateComplete(time,ch,sp.getSelectedItemPosition(),pos);
                                         //修改状态
@@ -146,7 +126,6 @@ public class MarkDateFragment extends DialogFragment {
                                         {
                                             e.printStackTrace();
                                         }
-                                    }
                                 }else{
                                     try
                                     {
@@ -202,7 +181,13 @@ public class MarkDateFragment extends DialogFragment {
         //adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         sp.setAdapter(adapter);
-        sp.setSelection(dateModel.getState());
+        state=0;
+        if (dateModel.getState()==3){
+            state=0;
+        }else {
+            state=dateModel.getState();
+        }
+        sp.setSelection(state);
 
     };
 
