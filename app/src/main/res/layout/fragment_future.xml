@@ -11,7 +11,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/home_title"
+            android:id="@+id/future_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2016-10-27 14:21:59"
@@ -20,7 +20,7 @@
             android:textColor="@android:color/black"
             />
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_week"
+            android:id="@+id/future_rv_week"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -28,38 +28,13 @@
             android:scrollbars="none">
         </android.support.v7.widget.RecyclerView>
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
+            android:id="@+id/future_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:overScrollMode="never"
             android:scrollbars="none">
         </android.support.v7.widget.RecyclerView>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            >
-            <ImageView
-                android:id="@+id/iv_today"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:background="@color/date_today"
-                android:layout_centerVertical="true"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/iv_today"
-                android:text="今日" />
-        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -131,38 +106,6 @@
                 android:text="危险期预测" />
         </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="8dp"
-            >
-            <TextView
-                android:id="@+id/home_tv_cur"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="今日:"
-                android:layout_centerVertical="true"
-                android:textSize="15sp"
-                />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            >
-            <TextView
-                android:id="@+id/home_tv_ch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="农历:"
-                android:layout_centerVertical="true"
-                android:textSize="15sp"
-                />
-        </RelativeLayout>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

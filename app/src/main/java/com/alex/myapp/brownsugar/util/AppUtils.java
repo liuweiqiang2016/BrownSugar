@@ -182,7 +182,7 @@ public class AppUtils {
             //增加到list中
             list.add(model);
         }
-        END_POS = list.size()-1;
+        END_POS = list.size() - 1;
         //从此处，本月份结束
         int a = list.size() % 7;
         if (a != 0) {
@@ -210,6 +210,83 @@ public class AppUtils {
 
         return list;
     }
+
+
+    //根据年月构造list
+    public static List<DateModel> getDateModelByYM(Context context, int year, int month) {
+        List<DateModel> list = new ArrayList<>();
+        Date date = AppUtils.formatStringDate(year + "-" + month + "-" + "01");
+        //本月1号是周几
+        int p1 = AppUtils.getWeek(context, date);
+        //上个月共多少天
+        int beforeDays = AppUtils.getDaysBefore(year, month);
+        for (int j = p1 - 1; j >= 0; j--) {
+            String strDate = getBeforeYearAndMonth(year, month) + "-" + (beforeDays - j);
+            //根据日期，从数据库中查找数据
+            DateModel model = new DateModel();
+            //获得当前日期 2016-10-31
+            model.setDate(strDate);
+            //默认正常
+            model.setState(0);
+            model.setCh(ChinaDateUtil.getCh(strDate));
+            model.setColor(context.getResources().getColor(R.color.darker_gray));
+            model.setCid(System.currentTimeMillis() + "");
+            //增加到list中
+            list.add(model);
+        }
+//        START_POS = list.size();
+        //从此处：本月份日期开始
+        int p2 = AppUtils.getDaysOfMonth(year, month);
+        for (int k = 1; k < p2 + 1; k++) {
+            String strDate = "";
+            if (k < 10) {
+                if (month > 9) {
+                    strDate = year + "-" + month + "-0" + k;
+                } else {
+                    strDate = year + "-0" + month + "-0" + k;
+                }
+
+            } else {
+                if (month > 9) {
+                    strDate = year + "-" + month + "-" + k;
+                } else {
+                    strDate = year + "-0" + month + "-" + k;
+                }
+            }
+            //根据日期，从数据库中查找数据
+            DateModel model = new DateModel();
+            model.setDate(strDate);
+            //默认正常
+            model.setState(0);
+            model.setCh(ChinaDateUtil.getCh(strDate));
+            model.setColor(context.getResources().getColor(R.color.black));
+            model.setCid(System.currentTimeMillis() + "");
+            //增加到list中
+            list.add(model);
+        }
+//        END_POS = list.size() - 1;
+        //从此处，本月份结束
+        int a = list.size() % 7;
+        if (a != 0) {
+            a = 7 - a;
+            for (int i = 1; i < a + 1; i++) {
+                //获得当前日期 2016-10-31
+                String strDate = getAfterYearAndMonth(year, month) + "-0" + i;
+                DateModel model = new DateModel();
+                model.setDate(strDate);
+                //默认正常
+                model.setState(0);
+                model.setCh(ChinaDateUtil.getCh(strDate));
+                model.setColor(context.getResources().getColor(R.color.darker_gray));
+                model.setCid(System.currentTimeMillis() + "");
+                //增加到list中
+                list.add(model);
+            }
+        }
+
+        return list;
+    }
+
 
     //根据当前年月，返回上个月年月
     public static String getBeforeYearAndMonth(int year, int month) {
@@ -328,7 +405,7 @@ public class AppUtils {
 
     //获得月经持续时间
     public static int getLast(DbUtils db) {
-        int last = 28;
+        int last = 5;
         if (db != null) {
             PersonModel personModel = db.findFirst(Selector.from(PersonModel.class).where("C_CID", "=", "personId"));
             if (personModel != null) {
@@ -351,10 +428,24 @@ public class AppUtils {
         list = db.findAll(Selector.from(DateModel.class).where("C_Date", ">=", start).and("C_Date", "<=", end).and("C_State", "<", 3).and("C_State", ">", 0).orderBy("C_Date"));
         return list;
     }
+    //查找指定年月内，所有的经期开始或近期结束记录
+    public static List<DateModel> getMenstrualListByYM(DbUtils db,int year,int month) {
+        String start="" ,end="";
+        if (month>9){
+            start=year+"-"+month+"-01";
+            end=year+"-"+month+"-"+getDaysOfMonth(year,month);
+        }else {
+            start=year+"-0"+month+"-01";
+            end=year+"-0"+month+"-"+getDaysOfMonth(year,month);
+        }
+        List<DateModel> list = new ArrayList<>();
+        list = db.findAll(Selector.from(DateModel.class).where("C_Date", ">=", start).and("C_Date", "<=", end).and("C_State", "<", 3).and("C_State", ">", 0).orderBy("C_Date"));
+        return list;
+    }
 
     //获取指定日期对应的pos
     public static int getPos(String strData, List<DateModel> list) {
-        int pos = 0;
+        int pos = -1;
         for (int i = 0; i < list.size(); i++) {
             if (strData.equals(list.get(i).getDate())) {
                 pos = i;

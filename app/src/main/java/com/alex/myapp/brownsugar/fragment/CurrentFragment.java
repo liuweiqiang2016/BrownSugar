@@ -40,8 +40,9 @@ public class CurrentFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String YEAR="year";
+    private static final String MONTH="month";
+    private static final String DAY="day";
 
     private RecyclerView rv, rv_week;
     private HomeAdapter mAdapter;
@@ -59,30 +60,13 @@ public class CurrentFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AboutFragment.
-     */
     // TODO: Rename and change types and number of parameters
-    public static CurrentFragment newInstance(String param1, String param2) {
+    public static CurrentFragment newInstance(DbUtils mdb,int year,int month,int day) {
         CurrentFragment fragment = new CurrentFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    // TODO: Rename and change types and number of parameters
-    public static CurrentFragment newInstance(DbUtils mdb) {
-        CurrentFragment fragment = new CurrentFragment();
-        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
+        args.putInt(YEAR,year);
+        args.putInt(MONTH,month);
+        args.putInt(DAY,day);
         db=mdb;
         fragment.setArguments(args);
         return fragment;
@@ -92,8 +76,9 @@ public class CurrentFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            year=getArguments().getInt(YEAR);
+            month=getArguments().getInt(MONTH);
+            day=getArguments().getInt(DAY);
         }
     }
 
@@ -114,20 +99,20 @@ public class CurrentFragment extends Fragment {
     }
 
     private void initData() {
+//        strDate = AppUtils.getDate();
+//        Date date = AppUtils.formatStringDate(strDate);
+//        Calendar now = Calendar.getInstance();
+//        now.setTime(date);
+//        year = now.get(Calendar.YEAR);
+//        month = now.get(Calendar.MONTH) + 1; // 0-based!
+//        day = now.get(Calendar.DAY_OF_MONTH);
         strDate = AppUtils.getDate();
-        Date date = AppUtils.formatStringDate(strDate);
-        Calendar now = Calendar.getInstance();
-        now.setTime(date);
-        year = now.get(Calendar.YEAR);
-        month = now.get(Calendar.MONTH) + 1; // 0-based!
-        day = now.get(Calendar.DAY_OF_MONTH);
         title = year + "年" + month + "月";
     }
 
     private void initView() {
 
         rv = (RecyclerView)view.findViewById(R.id.recyclerView);
-//        rv_week = (RecyclerView)view.findViewById(R.id.rv_week);
         rv_week= (RecyclerView) view.findViewById(R.id.rv_week);
         tv_title = (TextView)view.findViewById(R.id.home_title);
         tv_cur = (TextView)view.findViewById(R.id.home_tv_cur);
@@ -139,7 +124,6 @@ public class CurrentFragment extends Fragment {
                 StaggeredGridLayoutManager.VERTICAL));
         rv_week.setAdapter(adapter);
         //绘制日历
-//        List<DateModel> list=AppUtils.getDateModels(this,year,month,day);
         list = AppUtils.getDateModelByDB(getActivity(), db, year, month, day);
         start_pos=AppUtils.START_POS;
         end_pos=AppUtils.END_POS;

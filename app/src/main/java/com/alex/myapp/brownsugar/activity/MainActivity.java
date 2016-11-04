@@ -44,7 +44,9 @@ public class MainActivity extends AppCompatActivity
     private Toolbar toolbar;
     private DrawerLayout drawer;
     private CurrentFragment currentFragment;
+    private FutureFragment futureFragment;
 
+    private int year,month,day;
     private DbUtils db;
 
     @Override
@@ -76,6 +78,14 @@ public class MainActivity extends AppCompatActivity
             personModel.setLast(5);
             db.save(personModel);
         }
+
+        String strDate = AppUtils.getDate();
+        Date date = AppUtils.formatStringDate(strDate);
+        Calendar now = Calendar.getInstance();
+        now.setTime(date);
+        year = now.get(Calendar.YEAR);
+        month = now.get(Calendar.MONTH) + 1; // 0-based!
+        day = now.get(Calendar.DAY_OF_MONTH);
     }
 
     private void initView() {
@@ -91,7 +101,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setCheckedItem(R.id.nav_now);//设置默认选择第一个menu子项
         AppUtils.disableNavigationViewScrollbars(navigationView);//去除滑动块
 
-        currentFragment=CurrentFragment.newInstance(db);
+        currentFragment=CurrentFragment.newInstance(db,year,month,day);
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, currentFragment)
@@ -125,13 +135,16 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        //设置选择menu项
+        navigationView.setCheckedItem(id);
+        drawer.closeDrawers();
         if (id == R.id.nav_now) {
             // Handle the camera action
-
+            //消除卡顿时，drawer仍展开
+            mHandler.sendEmptyMessageDelayed(1,250);
         } else if (id == R.id.nav_future) {
-            FutureFragment fragment=FutureFragment.newInstance("1","3");
-            replaceFragment("未来",fragment);
+            //消除卡顿时，drawer仍展开
+            mHandler.sendEmptyMessageDelayed(2,250);
 
         } else if (id == R.id.nav_history) {
 
@@ -143,8 +156,8 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
@@ -175,22 +188,41 @@ public class MainActivity extends AppCompatActivity
     //切换fragment
     private void replaceFragment(String title, Fragment fragment) {
         toolbar.setTitle(title);
-//        fragment=new HolderFragment(url);
-//        fragment = AboutFragment.newInstance("1", "2");
+//        drawer.closeDrawers();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, fragment)
                 .commit();
 
-        drawer.closeDrawers();
+
     }
 
     @Override
     public void onMarkDateComplete(DateModel model, int pos) {
         //标记完成后
         if (currentFragment==null){
-            currentFragment=CurrentFragment.newInstance(db);
+            currentFragment=CurrentFragment.newInstance(db,year,month,day);
         }
         currentFragment.onMarkDateComplete(model,pos);
     }
+
+    private Handler mHandler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+
+            if (msg.what==1){
+                if (currentFragment==null){
+                    currentFragment=CurrentFragment.newInstance(db,year,month,day);
+                }
+                replaceFragment("本月信息",currentFragment);
+            }
+
+            if (msg.what==2){
+                if (futureFragment==null){
+                    futureFragment=FutureFragment.newInstance(db,year,month);
+                }
+                replaceFragment("下月预测",futureFragment);
+            }
+        }
+    };
 
 }
