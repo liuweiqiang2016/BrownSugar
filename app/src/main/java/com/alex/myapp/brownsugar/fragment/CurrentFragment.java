@@ -48,8 +48,7 @@ public class CurrentFragment extends Fragment {
     private HomeAdapter mAdapter;
     private TextView tv_title, tv_cur, tv_ch;
     private String title, strDate;
-    private int year, month, day,start_pos,end_pos;
-
+    private int year, month, day;
     private static DbUtils db;
     private List<DateModel> list;
 
@@ -99,13 +98,6 @@ public class CurrentFragment extends Fragment {
     }
 
     private void initData() {
-//        strDate = AppUtils.getDate();
-//        Date date = AppUtils.formatStringDate(strDate);
-//        Calendar now = Calendar.getInstance();
-//        now.setTime(date);
-//        year = now.get(Calendar.YEAR);
-//        month = now.get(Calendar.MONTH) + 1; // 0-based!
-//        day = now.get(Calendar.DAY_OF_MONTH);
         strDate = AppUtils.getDate();
         title = year + "年" + month + "月";
     }
@@ -123,25 +115,19 @@ public class CurrentFragment extends Fragment {
         rv_week.setLayoutManager(new StaggeredGridLayoutManager(7,
                 StaggeredGridLayoutManager.VERTICAL));
         rv_week.setAdapter(adapter);
-        //绘制日历
-        list = AppUtils.getDateModelByDB(getActivity(), db, year, month, day);
-        start_pos=AppUtils.START_POS;
-        end_pos=AppUtils.END_POS;
-        //2016-10-27
+
         tv_title.setText(title);
         tv_cur.setText("今日:" + strDate);
         tv_ch.setText("农历:" + ChinaDateUtil.oneDay(year, month, day));
-        //查看今天是否被标记
-        DateModel model = db.findFirst(Selector.from(DateModel.class).where("C_Date", "=", strDate));
-        int state = 0;
-        if (model != null) {
-            state = model.getState();
-        }
-        getForecastView(AppUtils.getPos(strDate,list),state);
+
+        //绘制日历
+        //2016-10-27
+        getMarkedView(-1,0);
         mAdapter = new HomeAdapter(getActivity(), list);
         rv.setLayoutManager(new StaggeredGridLayoutManager(7,
                 StaggeredGridLayoutManager.VERTICAL));
         rv.setAdapter(mAdapter);
+
 
     }
 
@@ -169,10 +155,6 @@ public class CurrentFragment extends Fragment {
 
 
 
-
-
-
-
 //    @Override
     public void onMarkDateComplete(DateModel model, int pos) {
         //标记完成后
@@ -185,13 +167,7 @@ public class CurrentFragment extends Fragment {
             case 0:
                 //正常
                 temp.setState(0);
-//                if (strDate.equals(model.getDate())){
-//                    temp.setColor(getResources().getColor(R.color.date_today));
-////                    model.setColor(getResources().getColor(R.color.date_today));
-//                }else {
                 temp.setColor(AppUtils.getColorByState(getActivity(), 0));
-//                    model.setColor(AppUtils.getColorByState(this, 0));
-//            }
                 break;
             case 1:
                 //经期开始
@@ -233,7 +209,8 @@ public class CurrentFragment extends Fragment {
                 int pos = msg.arg1;
                 int state=msg.arg2;
 
-                getForecastView(pos,state);
+                getMarkedView(pos,state);
+
                 mAdapter = new HomeAdapter(getActivity(), list);
                 rv.setLayoutManager(new StaggeredGridLayoutManager(7,
                         StaggeredGridLayoutManager.VERTICAL));
@@ -243,81 +220,51 @@ public class CurrentFragment extends Fragment {
         }
     };
 
-    //绘制预测日历
-    private void getForecastView(int pos,int state){
-        list=AppUtils.getInitList(getActivity(),list,start_pos,end_pos);
-        switch (state){
-            case 0:
-                //由经期开始、结束修改为正常
-                List<DateModel> temp=AppUtils.getMenstrualList(db,list.get(0).getDate(),list.get(list.size()-1).getDate());
-//                getForecastView(0,0);
-                int mp=0;
-                int ms=0;
 
-                if (temp!=null&&temp.size()>0){
-                    DateModel model=temp.get(temp.size()-1);
-                    mp=AppUtils.getPos(model.getDate(),list);
-                    ms=model.getState();
-                    getForecastView(mp,ms);
-                }else {
-//                    list=AppUtils.getDateModelList(db,list.get(0).getDate(),list.get(list.size()-1).getDate());
-                    list=AppUtils.getInitList(getActivity(),list,start_pos,end_pos);
-                }
-                break;
-            //由经期开始，预测经期结束及危险期
-            case 1:
-                // 获取最新的list
-//                list=AppUtils.getDateModelList(db,list.get(0).getDate(),list.get(list.size()-1).getDate());
-                //危险期预测
-                int a=pos+AppUtils.getCycle(db)-14-5;//(pos+9)
-                int b=pos+AppUtils.getCycle(db)-14+4;//(pos+18)
-                if (a>list.size()-1){
-                    return;
-                }else {
-                    if (b>list.size()-1){
-                        for (int i=a;i<list.size();i++){
-                            list.get(i).setState(3);
-                            list.get(i).setColor(AppUtils.getColorByState(getActivity(),3));
-                        }
-                    }else{
-                        for (int i=a;i<b;i++){
-                            list.get(i).setState(3);
-                            list.get(i).setColor(AppUtils.getColorByState(getActivity(),3));
-                        }
-                    }
-                }
-
-                break;
-            //由经期结束，预测危险期
-            case 2:
-                // 获取最新的list
-//                list=AppUtils.getDateModelList(db,list.get(0).getDate(),list.get(list.size()-1).getDate());
-                int m=pos-AppUtils.getLast(db)+28-14-5;//(pos+4)
-                int n=pos-AppUtils.getLast(db)+28-14+4;//(pos+14)
-                //危险期预测
-                if (m>list.size()-1){
-                    return;
-                }else {
-                    if (n>list.size()-1){
-                        for (int i=m;i<list.size();i++){
-                            list.get(i).setState(3);
-                            list.get(i).setColor(AppUtils.getColorByState(getActivity(),3));
-                        }
-                    }else{
-                        for (int i=m;i<n;i++){
-                            list.get(i).setState(3);
-                            list.get(i).setColor(AppUtils.getColorByState(getActivity(),3));
-                        }
-                    }
-                }
-
-                break;
+    //标记后更新view
+    private void getMarkedView(int pos,int state){
+        //0、重置list
+        list = AppUtils.getDateModelByYM(getActivity(), year,month);
+        //1、更新修改的model
+        if (pos!=-1){
+            list.get(pos).setState(state);
+            list.get(pos).setColor(AppUtils.getColorByState(getActivity(),state));
         }
-        //最后得到的list，回之前，今天调色
+        //2、获取最近的经期记录
+        List<DateModel> mList;
+        DateModel model=null;
+        mList=AppUtils.getMenstrualList(db);
+        if (mList!=null&&mList.size()>0){
+            model=mList.get(mList.size()-1);
+        }
+        List<String> risk;
+        if (model!=null){
+            //得到的预计危险期(倒数第一条记录的危险期预测）
+            risk=AppUtils.getRiskData(db,model.getDate(),model.getState());
+            for (int i = 0; i < list.size(); i++) {
+                //所有在本月的经期记录上色
+                for (int j = 0; j < mList.size(); j++) {
+                    if (mList.get(j).getDate().equals(list.get(i).getDate())){
+                        list.get(i).setState(mList.get(j).getState());
+                        list.get(i).setColor(AppUtils.getColorByState(getActivity(),mList.get(j).getState()));
+                    }
+                }
+                //所有在本月预计的危险期上色
+                for (int k = 0; k < risk.size(); k++) {
+                    if (risk.get(k).equals(list.get(i).getDate())){
+                        list.get(i).setState(3);
+                        list.get(i).setColor(AppUtils.getColorByState(getActivity(),3));
+                    }
+                }
+
+            }
+
+        }
+        //3、设置今天view
+        //最后得到的list，返回之前，今天调色
         int tp=AppUtils.getPos(strDate,list);
         list.get(tp).setColor(getResources().getColor(R.color.date_today));
 
     }
-
 
 }

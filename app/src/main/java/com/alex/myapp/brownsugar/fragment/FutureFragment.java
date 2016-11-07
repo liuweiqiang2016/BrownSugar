@@ -44,7 +44,6 @@ public class FutureFragment extends Fragment {
     private static DbUtils db;
     private List<DateModel> list,mList;
     private View view;
-    private DateModel model;
 
 
     public FutureFragment() {
@@ -96,8 +95,6 @@ public class FutureFragment extends Fragment {
         mList=AppUtils.getMenstrualListByYM(db,year,month);
         if (mList==null||mList.size()<1){
             AppUtils.showToast(getActivity(),"上月无经期记录，本月无法做出预测!");
-        }else {
-            model=mList.get(mList.size()-1);
         }
     }
 
@@ -113,138 +110,62 @@ public class FutureFragment extends Fragment {
         rv_week.setLayoutManager(new StaggeredGridLayoutManager(7,
                 StaggeredGridLayoutManager.VERTICAL));
         rv_week.setAdapter(adapter);
+//        list = AppUtils.getDateModelByYM(getActivity(), f_year, f_month);
+        //绘制日历
+        getMarkedView(-1,0);
 
-        list = AppUtils.getDateModelByYM(getActivity(), f_year, f_month);
         mAdapter = new HomeAdapter(getActivity(), list);
         rv.setLayoutManager(new StaggeredGridLayoutManager(7,
                 StaggeredGridLayoutManager.VERTICAL));
         rv.setAdapter(mAdapter);
     }
 
-    private void adjustList(){
-
+    //标记后更新view
+    private void getMarkedView(int pos,int state){
+        //0、重置list
+        list = AppUtils.getDateModelByYM(getActivity(),f_year, f_month);
+        //1、更新修改的model
+        if (pos!=-1){
+            list.get(pos).setState(state);
+            list.get(pos).setColor(AppUtils.getColorByState(getActivity(),state));
+        }
+        //2、获取上个月最近的经期记录
+        List<DateModel> mList;
+        DateModel model=null;
+        mList=AppUtils.getMenstrualListByYM(db,year,month);
+        if (mList!=null&&mList.size()>0){
+            model=mList.get(mList.size()-1);
+        }
+        List<String> risk;
         if (model!=null){
-            //经期开始记录
-//            if (model.getState()==1){
-//                //b-a=9
-//                int a=AppUtils.getCycle(db)-14-5;//(pos+9)危险期开始
-//                int b=AppUtils.getCycle(db)-14+4;//(pos+18)危险期结束
-//
-//                //相差9天
-//                String bd_start=AppUtils.getDataByCount(model.getDate(),a);//上个月推算的危险期开始
-//                String bd_end=AppUtils.getDataByCount(model.getDate(),b);//上个月推算的危险期结束
-//
-//                //相差AppUtils.getLast(db)天
-//                String c_start=AppUtils.getDataByCount(model.getDate(),AppUtils.getCycle(db));//本月经期开始
-//                String c_end=AppUtils.getDataByCount(model.getDate(),AppUtils.getCycle(db)+AppUtils.getLast(db));//本月经期结束
-//
-//                //相差9天
-//                String cd_start=AppUtils.getDataByCount(c_start,a);//本月推算的危险期开始
-//                String cd_end=AppUtils.getDataByCount(c_start,b);//本月推算的危险期结束
-//                int bs=-1,be=-1,cs=-1,ce=-1,cds=-1,cde=-1;
-//
-//                for (int i = 0; i < list.size(); i++) {
-//                    if (bd_start.equals(list.get(i).getDate())){
-//                        bs=i;
-//                    }
-//                    if (bd_end.equals(list.get(i).getDate())){
-//                        be=i;
-//                    }
-//                    if (bs!=-1){
-//
-//                    }
-//                    if (c_start.equals(list.get(i).getDate())){
-////                        cs=i;
-//                        list.get(i).setState(1);
-//                        list.get(i).setColor(AppUtils.getColorByState(getActivity(),1));
-//                    }
-//                    if (c_end.equals(list.get(i).getDate())){
-////                        ce=i;
-//                        list.get(i).setState(2);
-//                        list.get(i).setColor(AppUtils.getColorByState(getActivity(),2));
-//                    }
-//                    if (cd_start.equals(list.get(i).getDate())){
-//                        cds=i;
-//                    }
-//                    if (cds!=-1){
-//
-//                    }
-//                    if (cd_end.equals(list.get(i).getDate())){
-//                        cde=i;
-//                    }
-//
-//                }
-//
-//                //截取list
-//                List<DateModel> result=list;
-//
-//
-//            }
-            String strData=AppUtils.getDataByCount(model.getDate(),AppUtils.getCycle(db));
-            int pos=AppUtils.getPos(strData,list);
+            //得到的预计危险期(倒数第一条记录的危险期预测）
+            risk=AppUtils.getRiskData(db,model.getDate(),model.getState());
+            //add本月的危险期预测
+            String f_data=AppUtils.getDataByCount(model.getDate(),AppUtils.getCycle(db));
+            risk.addAll(AppUtils.getRiskData(db,f_data,model.getState()));
+            for (int i = 0; i < list.size(); i++) {
+                //所有在本月的经期记录上色
+                for (int j = 0; j < mList.size(); j++) {
+                    if (mList.get(j).getDate().equals(list.get(i).getDate())){
+                        list.get(i).setState(mList.get(j).getState());
+                        list.get(i).setColor(AppUtils.getColorByState(getActivity(),mList.get(j).getState()));
+                    }
+                }
+                //所有在本月预计的危险期上色
+                for (int k = 0; k < risk.size(); k++) {
+                    if (risk.get(k).equals(list.get(i).getDate())){
+                        list.get(i).setState(3);
+                        list.get(i).setColor(AppUtils.getColorByState(getActivity(),3));
+                    }
+                }
 
-
-            getForecastView(pos,model.getState());
+            }
 
         }
 
     }
 
-    //绘制预测日历
-    private void getForecastView(int pos,int state){
-        switch (state){
-            //由经期开始，预测经期结束及危险期
-            case 1:
-                //危险期预测
-                int a=pos+AppUtils.getCycle(db)-14-5;//(pos+9)
-                int b=pos+AppUtils.getCycle(db)-14+4;//(pos+18)
-                if (a>list.size()-1){
-                    return;
-                }else {
-                    if (b>list.size()-1){
-                        for (int i=a;i<list.size();i++){
-                            list.get(i).setState(3);
-                            list.get(i).setColor(AppUtils.getColorByState(getActivity(),3));
-                        }
-                    }else{
-                        for (int i=a;i<b;i++){
-                            list.get(i).setState(3);
-                            list.get(i).setColor(AppUtils.getColorByState(getActivity(),3));
-                        }
-                    }
-                }
 
-                break;
-            //由经期结束，预测危险期
-            case 2:
-                int m=pos-AppUtils.getLast(db)+28-14-5;//(pos+4)
-                int n=pos-AppUtils.getLast(db)+28-14+4;//(pos+14)
-                //危险期预测
-                if (m>list.size()-1){
-                    return;
-                }else {
-                    if (n>list.size()-1){
-                        for (int i=m;i<list.size();i++){
-                            list.get(i).setState(3);
-                            list.get(i).setColor(AppUtils.getColorByState(getActivity(),3));
-                        }
-                    }else{
-                        for (int i=m;i<n;i++){
-                            list.get(i).setState(3);
-                            list.get(i).setColor(AppUtils.getColorByState(getActivity(),3));
-                        }
-                    }
-                }
-
-                break;
-        }
-        //最后得到的list，回之前，今天调色
-//        int tp=AppUtils.getPos(strDate,list);
-//        list.get(tp).setColor(getResources().getColor(R.color.date_today));
-
-
-
-    }
 
 
 
