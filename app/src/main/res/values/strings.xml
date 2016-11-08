@@ -23,5 +23,11 @@
         <item>经期结束</item>
     </string-array>
 
+    <string-array name="array_state">
+        <item>全部</item>
+        <item>经期开始</item>
+        <item>经期结束</item>
+    </string-array>
+
 
 </resources>

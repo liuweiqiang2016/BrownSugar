@@ -93,12 +93,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
 //        if (position < 7) {
 //            TextPaint tp = holder.tv.getPaint();
 //            tp.setFakeBoldText(true);
-//        }else{
-//            holder.rl.setBackgroundResource(R.drawable.item_bg);
-//        }
-//        holder.tv.setTextColor(mColors.get(position));
-
-        // 如果设置了回调，则设置点击事件
+//        }else{// 如果设置了回调，则设置点击事件
         if (mOnItemClickLitener != null) {
             holder.itemView.setOnClickListener(new OnClickListener() {
                 @Override
@@ -114,6 +109,11 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
 //                    mOnItemClickLitener.onItemClick(holder.itemView, pos,mList.get(position),isCurrent,mStart,mEnd,mList.size());
                 }
             });
+//            holder.rl.setBackgroundResource(R.drawable.item_bg);
+//        }
+//        holder.tv.setTextColor(mColors.get(position));
+
+
         }
 
 

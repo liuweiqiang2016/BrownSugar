@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
+    android:layout_marginRight="3dp"
+    android:layout_marginLeft="3dp"
+    >
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1.0"
+        >
+        <com.alex.myapp.brownsugar.util.MaqueeTextView
+            android:id="@+id/his_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="项目名称"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1.0"
+        >
+        <TextView
+            android:id="@+id/his_state"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="经期开始"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1.0">
+            <TextView
+                android:id="@+id/his_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="2016-11-8"
+                />
+    </LinearLayout>
+
+
+</LinearLayout>

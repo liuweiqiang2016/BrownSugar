@@ -22,7 +22,9 @@ import com.alex.myapp.brownsugar.adapter.WeekAdapter;
 import com.alex.myapp.brownsugar.fragment.AboutFragment;
 import com.alex.myapp.brownsugar.fragment.CurrentFragment;
 import com.alex.myapp.brownsugar.fragment.FutureFragment;
+import com.alex.myapp.brownsugar.fragment.HistoryFragment;
 import com.alex.myapp.brownsugar.fragment.MarkDateFragment;
+import com.alex.myapp.brownsugar.fragment.QueryHistoryFragment;
 import com.alex.myapp.brownsugar.model.DateModel;
 import com.alex.myapp.brownsugar.model.PersonModel;
 import com.alex.myapp.brownsugar.util.AppUtils;
@@ -37,7 +39,7 @@ import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MarkDateFragment.MarkDateListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MarkDateFragment.MarkDateListener, QueryHistoryFragment.QueryHistoryListener {
 
     private AboutFragment fragment;
     private NavigationView navigationView;
@@ -45,8 +47,9 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawer;
     private CurrentFragment currentFragment;
     private FutureFragment futureFragment;
+    private HistoryFragment historyFragment;
 
-    private int year,month,day;
+    private int year, month, day;
     private DbUtils db;
 
     @Override
@@ -66,10 +69,10 @@ public class MainActivity extends AppCompatActivity
         //初始化数据库
         //初始化可修改项目（服务和成本）
         db = MyDbUtils.getInstance().Db(this);
-        PersonModel personModel=db.findFirst(Selector.from(PersonModel.class).where("C_CID","=","personId"));
-        if (personModel==null){
+        PersonModel personModel = db.findFirst(Selector.from(PersonModel.class).where("C_CID", "=", "personId"));
+        if (personModel == null) {
             //初始化个人生理周期
-            personModel=new PersonModel();
+            personModel = new PersonModel();
             //默认id为personId
             personModel.setCid("personId");
             //默认经期周期为28
@@ -101,7 +104,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setCheckedItem(R.id.nav_now);//设置默认选择第一个menu子项
         AppUtils.disableNavigationViewScrollbars(navigationView);//去除滑动块
 
-        currentFragment=CurrentFragment.newInstance(db,year,month,day);
+        currentFragment = CurrentFragment.newInstance(db, year, month, day);
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, currentFragment)
@@ -141,12 +144,13 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_now) {
             // Handle the camera action
             //消除卡顿时，drawer仍展开
-            mHandler.sendEmptyMessageDelayed(1,250);
+            mHandler.sendEmptyMessageDelayed(1, 250);
         } else if (id == R.id.nav_future) {
             //消除卡顿时，drawer仍展开
-            mHandler.sendEmptyMessageDelayed(2,250);
+            mHandler.sendEmptyMessageDelayed(2, 250);
 
         } else if (id == R.id.nav_history) {
+            mHandler.sendEmptyMessageDelayed(3, 250);
 
         } else if (id == R.id.nav_note) {
 
@@ -199,30 +203,94 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onMarkDateComplete(DateModel model, int pos) {
         //标记完成后
-        if (currentFragment==null){
-            currentFragment=CurrentFragment.newInstance(db,year,month,day);
+        if (currentFragment == null) {
+            currentFragment = CurrentFragment.newInstance(db, year, month, day);
         }
-        currentFragment.onMarkDateComplete(model,pos);
+        currentFragment.onMarkDateComplete(model, pos);
     }
 
-    private Handler mHandler=new Handler(){
+    @Override
+    public void QueryHistoryComplete(int state, String start, String end) {
+        //历史数据查询条件设置完成
+        List<DateModel> list;
+        if (state == 0) {
+            if (start.equals("")) {
+                if (end.equals("")) {
+                    //状态为全部，开始为空，结束为空
+                    list = db.findAll(Selector.from(DateModel.class).orderBy("C_Date"));
+
+                } else {
+                    //状态为全部，开始为空，结束不为空
+                    list = db.findAll(Selector.from(DateModel.class).where("C_Date", "<=", end).orderBy("C_Date"));
+                }
+
+            } else {
+                if (end.equals("")) {
+                    //状态为全部，开始不为空，结束为空
+                    list = db.findAll(Selector.from(DateModel.class).where("C_Date", ">=", start).orderBy("C_Date"));
+
+                } else {
+                    //状态为全部，开始不为空，结束不为空
+                    list = db.findAll(Selector.from(DateModel.class).where("C_Date", ">=", start).and("C_Date", "<=", end).orderBy("C_Date"));
+                }
+
+            }
+        } else {
+            if (start.equals("")) {
+                if (end.equals("")) {
+                    //状态指定，开始为空，结束为空
+                    list = db.findAll(Selector.from(DateModel.class).where("C_State", "=", state).orderBy("C_Date"));
+
+                } else {
+                    //状态指定，开始为空，结束不为空
+                    list = db.findAll(Selector.from(DateModel.class).where("C_Date", "<=", end).and("C_State", "=", state).orderBy("C_Date"));
+                }
+
+            } else {
+                if (end.equals("")) {
+                    //状态指定，开始不为空，结束为空
+                    list = db.findAll(Selector.from(DateModel.class).where("C_Date", ">=", start).and("C_State", "=", state).orderBy("C_Date"));
+
+                } else {
+                    //状态指定，开始不为空，结束不为空
+                    list = db.findAll(Selector.from(DateModel.class).where("C_Date", ">=", start).and("C_Date", "<=", end).and("C_State", "=", state).orderBy("C_Date"));
+                }
+
+            }
+        }
+
+        if (historyFragment != null) {
+            historyFragment.QueryHistoryComplete(state, start, end, list);
+        }
+
+
+    }
+
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
 
-            if (msg.what==1){
-                if (currentFragment==null){
-                    currentFragment=CurrentFragment.newInstance(db,year,month,day);
+            if (msg.what == 1) {
+                if (currentFragment == null) {
+                    currentFragment = CurrentFragment.newInstance(db, year, month, day);
                 }
-                replaceFragment("本月信息",currentFragment);
+                replaceFragment("本月信息", currentFragment);
             }
 
-            if (msg.what==2){
-                if (futureFragment==null){
-                    futureFragment=FutureFragment.newInstance(db,year,month);
+            if (msg.what == 2) {
+                if (futureFragment == null) {
+                    futureFragment = FutureFragment.newInstance(db, year, month);
                 }
-                replaceFragment("下月预测",futureFragment);
+                replaceFragment("下月预测", futureFragment);
+            }
+
+            if (msg.what == 3) {
+                List<DateModel> list = AppUtils.getMenstrualList(db);
+                historyFragment = HistoryFragment.newInstance(list);
+                replaceFragment("历史数据", historyFragment);
             }
         }
     };
+
 
 }

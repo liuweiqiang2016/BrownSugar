@@ -69,24 +69,8 @@ public class AboutFragment extends Fragment {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_about, container, false);
         tv= (TextView) view.findViewById(R.id.tv_version);
-        tv.setText("V:"+getVersion());
         return view;
     }
 
-    /**
-     2  * 获取版本号
-     3  * @return 当前应用的版本号
-     4  */
-     public String getVersion() {
-             try {
-                     PackageManager manager = getActivity().getPackageManager();
-                     PackageInfo info = manager.getPackageInfo(getActivity().getPackageName(), 0);
-                     String version = info.versionName;
-                     return version;
-                 } catch (Exception e) {
-                     e.printStackTrace();
-                     return "1.0";
-                }
-         }
 
 }

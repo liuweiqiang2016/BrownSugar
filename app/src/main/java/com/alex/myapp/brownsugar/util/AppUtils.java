@@ -383,5 +383,34 @@ public class AppUtils {
         return str;
     }
 
+    /**
+     * 比较开始时间和结束时间
+     *
+     * @param startDate 开始时间 "yyyy-MM-dd "
+     * @param endDate   结束时间 "yyyy-MM-dd"
+     * @return true 表示开始时间大于结束时间
+     */
+    public static boolean compareDate(String startDate, String endDate) {
+        Date startTime = null, endTime = null;
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd");
+        if (!startDate.equals("") && !endDate.equals("")) {
+            try {
+                startTime = dateFormat.parse(startDate);
+                endTime = dateFormat.parse(endDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            if (startTime.getTime() > endTime.getTime()) {
+                // CommomFun.toastMsg(R.string.time_error);
+                return true;
+            }else {
+                return false;
+            }
+        }else {
+            return true;
+        }
+    }
+
 
 }

@@ -184,7 +184,9 @@ public class CurrentFragment extends Fragment {
         //先删除
         db.delete(DateModel.class, WhereBuilder.b("C_Date", "=", model.getDate()));
         //再添加
-        db.save(temp);
+        if (model.getState()!=0){
+            db.save(temp);
+        }
         //更新view
         msg.what = 1;
         //pos
