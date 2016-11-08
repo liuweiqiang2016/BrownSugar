@@ -122,6 +122,7 @@ public class CurrentFragment extends Fragment {
 
         //绘制日历
         //2016-10-27
+
         getMarkedView(-1,0);
         mAdapter = new HomeAdapter(getActivity(), list);
         rv.setLayoutManager(new StaggeredGridLayoutManager(7,
