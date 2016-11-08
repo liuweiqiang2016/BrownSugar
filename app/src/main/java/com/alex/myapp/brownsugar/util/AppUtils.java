@@ -359,7 +359,6 @@ public class AppUtils {
     //根据某次经期记录(开始或结束)，计算危险期
     public static List<String> getRiskData(DbUtils db,String strData,int state){
         List<String> list=new ArrayList<>();
-
         //根据上次的经期，得到的下次经期
         String str="";
         if (state==1){

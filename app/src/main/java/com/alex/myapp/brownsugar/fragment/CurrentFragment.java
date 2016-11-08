@@ -119,10 +119,8 @@ public class CurrentFragment extends Fragment {
         tv_title.setText(title);
         tv_cur.setText("今日:" + strDate);
         tv_ch.setText("农历:" + ChinaDateUtil.oneDay(year, month, day));
-
         //绘制日历
         //2016-10-27
-
         getMarkedView(-1,0);
         mAdapter = new HomeAdapter(getActivity(), list);
         rv.setLayoutManager(new StaggeredGridLayoutManager(7,

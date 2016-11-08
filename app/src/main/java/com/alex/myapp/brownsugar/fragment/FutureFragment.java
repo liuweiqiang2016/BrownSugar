@@ -138,7 +138,6 @@ public class FutureFragment extends Fragment {
         }
         List<String> risk;
         if (model!=null){
-
             //得到的预计危险期(倒数第一条记录的危险期预测）
             risk=AppUtils.getRiskData(db,model.getDate(),model.getState());
             //add本月的危险期预测
