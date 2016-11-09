@@ -9,37 +9,35 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 
 import com.alex.myapp.brownsugar.R;
-import com.alex.myapp.brownsugar.adapter.HomeAdapter;
-import com.alex.myapp.brownsugar.adapter.WeekAdapter;
 import com.alex.myapp.brownsugar.fragment.AboutFragment;
 import com.alex.myapp.brownsugar.fragment.CurrentFragment;
 import com.alex.myapp.brownsugar.fragment.FutureFragment;
 import com.alex.myapp.brownsugar.fragment.HistoryFragment;
 import com.alex.myapp.brownsugar.fragment.MarkDateFragment;
-import com.alex.myapp.brownsugar.fragment.QueryHistoryFragment;
+import com.alex.myapp.brownsugar.fragment.NoteFragment;
+import com.alex.myapp.brownsugar.fragment.QueryNoteFragment;
+import com.alex.myapp.brownsugar.fragment.SettingFragment;
+import com.alex.myapp.brownsugar.fragment.SettingHistoryFragment;
+import com.alex.myapp.brownsugar.fragment.SettingNoteFragment;
 import com.alex.myapp.brownsugar.model.DateModel;
+import com.alex.myapp.brownsugar.model.NoteModel;
 import com.alex.myapp.brownsugar.model.PersonModel;
 import com.alex.myapp.brownsugar.util.AppUtils;
-import com.alex.myapp.brownsugar.util.ChinaDateUtil;
 import com.alex.myapp.brownsugar.util.MyDbUtils;
 import com.zeone.framework.db.sqlite.DbUtils;
 import com.zeone.framework.db.sqlite.Selector;
-import com.zeone.framework.db.sqlite.WhereBuilder;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MarkDateFragment.MarkDateListener, QueryHistoryFragment.QueryHistoryListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MarkDateFragment.MarkDateListener, SettingHistoryFragment.QueryHistoryListener,
+        SettingNoteFragment.SettingNoteListener {
 
     private AboutFragment fragment;
     private NavigationView navigationView;
@@ -48,6 +46,9 @@ public class MainActivity extends AppCompatActivity
     private CurrentFragment currentFragment;
     private FutureFragment futureFragment;
     private HistoryFragment historyFragment;
+    private NoteFragment noteFragment;
+    private QueryNoteFragment queryNoteFragment;
+    private SettingFragment settingFragment;
 
     private int year, month, day;
     private DbUtils db;
@@ -153,15 +154,34 @@ public class MainActivity extends AppCompatActivity
             mHandler.sendEmptyMessageDelayed(3, 250);
 
         } else if (id == R.id.nav_note) {
+            if (noteFragment==null){
+                noteFragment = NoteFragment.newInstance(db);
+            }
+            replaceFragment(item.getTitle().toString(), noteFragment);
+        } else if (id == R.id.nav_note_query) {
+            mHandler.sendEmptyMessageDelayed(4, 250);
+
+        } else if (id == R.id.nav_setting) {
+            if (settingFragment==null){
+                settingFragment=SettingFragment.newInstance("","");
+            }
+            replaceFragment(item.getTitle().toString(), settingFragment);
+
+
+        } else if (id == R.id.nav_update) {
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_update) {
+
+        } else if (id == R.id.nav_about) {
+
+        } else if (id == R.id.nav_exit) {
+
 
         }
 
 //        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        drawer.closeDrawer(GravityCompat.START);
+//        drawer.closeDrawer(GravityCompat.START);nav_share
         return true;
     }
 
@@ -289,8 +309,72 @@ public class MainActivity extends AppCompatActivity
                 historyFragment = HistoryFragment.newInstance(list);
                 replaceFragment("历史数据", historyFragment);
             }
+            if (msg.what==4){
+                List<NoteModel> list = db.findAll(Selector.from(NoteModel.class).orderBy("C_Time"));
+                queryNoteFragment = QueryNoteFragment.newInstance(list);
+                replaceFragment("笔记查询", queryNoteFragment);
+            }
         }
     };
 
 
+    @Override
+    public void SettingNoteComplete(String subject, String start, String end) {
+        //笔记查询条件设置完成
+        List<NoteModel> list;
+        if (subject.equals("")) {
+            if (start.equals("")) {
+                if (end.equals("")) {
+                    //主题为空，开始为空，结束为空
+                    list = db.findAll(Selector.from(NoteModel.class).orderBy("C_Time"));
+
+                } else {
+                    //主题为空，开始为空，结束不为空
+                    list = db.findAll(Selector.from(NoteModel.class).where("C_Time", "<=", end).orderBy("C_Time"));
+                }
+
+            } else {
+                if (end.equals("")) {
+                    //主题为空，开始不为空，结束为空
+                    list = db.findAll(Selector.from(NoteModel.class).where("C_Time", ">=", start).orderBy("C_Time"));
+
+                } else {
+                    //主题为空，开始不为空，结束不为空
+                    list = db.findAll(Selector.from(NoteModel.class).where("C_Time", ">=", start).and("C_Time", "<=", end).orderBy("C_Time"));
+                }
+
+            }
+        } else {
+            if (start.equals("")) {
+                if (end.equals("")) {
+                    //主题不为空，开始为空，结束为空
+                    list = db.findAll(Selector.from(NoteModel.class).where("C_Subject", "=", subject).orderBy("C_Time"));
+
+                } else {
+                    //主题不为空，开始为空，结束不为空
+                    list = db.findAll(Selector.from(NoteModel.class).where("C_Time", "<=", end).and("C_Subject", "=", subject).orderBy("C_Time"));
+                }
+
+            } else {
+                if (end.equals("")) {
+                    //主题不为空，开始不为空，结束为空
+                    list = db.findAll(Selector.from(NoteModel.class).where("C_Time", ">=", start).and("C_Subject", "=", subject).orderBy("C_Time"));
+
+                } else {
+                    //主题不为空，开始不为空，结束不为空
+                    list = db.findAll(Selector.from(NoteModel.class).where("C_Time", ">=", start).and("C_Time", "<=", end).and("C_Subject", "=", subject).orderBy("C_Time"));
+                }
+
+            }
+        }
+
+//        if (historyFragment != null) {
+//            historyFragment.QueryHistoryComplete(subject, start, end, list);
+//        }
+        if (queryNoteFragment!=null){
+            queryNoteFragment.SettingNoteComplete(subject,start,end,list);
+        }
+
+
+    }
 }

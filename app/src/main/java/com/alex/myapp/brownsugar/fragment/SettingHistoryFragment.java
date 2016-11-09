@@ -27,7 +27,7 @@ import java.lang.reflect.Field;
 /**
  * Created by liuweiqiang on 2016/9/8.
  */
-public class QueryHistoryFragment extends DialogFragment {
+public class SettingHistoryFragment extends DialogFragment {
 
 
     TextView tv_time,tv_ch;
@@ -46,8 +46,8 @@ public class QueryHistoryFragment extends DialogFragment {
     private static final String START = "param2";
     private static final String END = "param3";
     private static final String POSITION = "param4";
-    public static QueryHistoryFragment newInstance(Context context, String mStart, String mEnd, int mPosition) {
-        QueryHistoryFragment fragment = new QueryHistoryFragment();
+    public static SettingHistoryFragment newInstance(Context context, String mStart, String mEnd, int mPosition) {
+        SettingHistoryFragment fragment = new SettingHistoryFragment();
         Bundle args = new Bundle();
         args.putString(START,mStart);
         args.putString(END, mEnd);
@@ -66,7 +66,7 @@ public class QueryHistoryFragment extends DialogFragment {
             mPosition=getArguments().getInt(POSITION);
         }
     }
-    public QueryHistoryFragment() {
+    public SettingHistoryFragment() {
     }
 
     //标记日期完毕后，保存按钮回调处理方法

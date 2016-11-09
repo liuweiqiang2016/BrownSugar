@@ -22,7 +22,7 @@
                 android:id="@+id/nav_note"
                 android:checkable="true"
                 android:icon="@drawable/ic_mode_edit_green_600_48dp"
-                android:title="我的笔记" />
+                android:title="私密笔记" />
             <item
                 android:id="@+id/nav_note_query"
                 android:checkable="true"
@@ -32,7 +32,7 @@
                 android:id="@+id/nav_setting"
                 android:checkable="true"
                 android:icon="@drawable/ic_settings_blue_a400_48dp"
-                android:title="系统设置" />
+                android:title="经期设置" />
         </menu>
     </item>
     <item android:title="系统">

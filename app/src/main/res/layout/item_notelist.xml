@@ -6,12 +6,13 @@
     android:layout_marginLeft="3dp"
     android:layout_marginRight="3dp"
     android:layout_marginTop="10dp"
+    android:background="@drawable/item_bg"
     android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1.0">
+        android:layout_weight="2.0">
 
         <com.alex.myapp.brownsugar.util.MaqueeTextView
             android:id="@+id/his_id"
@@ -20,21 +21,6 @@
             android:ellipsize="marquee"
             android:singleLine="true"
             android:text="项目名称" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1.0">
-
-        <com.alex.myapp.brownsugar.util.MaqueeTextView
-            android:id="@+id/his_state"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="经期开始" />
     </LinearLayout>
 
     <LinearLayout

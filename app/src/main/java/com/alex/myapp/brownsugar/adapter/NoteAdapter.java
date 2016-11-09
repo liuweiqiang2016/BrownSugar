@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.alex.myapp.brownsugar.R;
-import com.alex.myapp.brownsugar.model.DateModel;
+import com.alex.myapp.brownsugar.model.NoteModel;
 import com.alex.myapp.brownsugar.util.MaqueeTextView;
 
 import java.util.ArrayList;
@@ -18,14 +18,14 @@ import java.util.List;
 /**
  * Created by uu on 2016/9/7.
  */
-public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHolder> {
+public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> {
 
-    private List<DateModel> mList=new ArrayList<>();
+    private List<NoteModel> mList=new ArrayList<>();
     private Context mContext;
 
     public interface OnItemClickLitener {
 
-        void onItemClick(View view,DateModel model,int pos);
+        void onItemClick(View view, NoteModel model, int pos);
     }
     private OnItemClickLitener mOnItemClickLitener;
 
@@ -33,7 +33,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
         this.mOnItemClickLitener = mOnItemClickLitener;
     }
 
-    public HistoryAdapter(List<DateModel> mList, Context mContext) {
+    public NoteAdapter(List<NoteModel> mList, Context mContext) {
         this.mList = mList;
         this.mContext = mContext;
     }
@@ -41,24 +41,16 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         MyViewHolder holder = new MyViewHolder(LayoutInflater.from(mContext).inflate(
-                R.layout.item_hislist, parent, false));
+                R.layout.item_notelist, parent, false));
         return holder;
     }
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder,final int position) {
 
-        //取后十位
-        String cid=mList.get(position).getCid();
-        holder.id.setText(cid.substring(cid.length()-10,cid.length()));
-        holder.date.setText(mList.get(position).getDate());
-        if (mList.get(position).getState()==1){
-            holder.state.setText("经期开始");
-        }
-        if (mList.get(position).getState()==2){
-            holder.state.setText("经期结束");
+        holder.id.setText(mList.get(position).getTime());
+        holder.date.setText(mList.get(position).getSubject());
 
-        }
 
         if (mOnItemClickLitener!=null){
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -73,9 +65,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
 
     }
 
-    public void changeData(List<DateModel> list){
+    public void changeData(List<NoteModel> list){
         mList=list;
         notifyDataSetChanged();
+
     }
 
     @Override
@@ -86,7 +79,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
     class MyViewHolder extends RecyclerView.ViewHolder
     {
 
-        MaqueeTextView id,state,date;//项目数量
+        MaqueeTextView id,date;//项目数量
 
 
         public MyViewHolder(View view)
@@ -94,7 +87,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
             super(view);
             id = (MaqueeTextView) view.findViewById(R.id.his_id);
             date = (MaqueeTextView) view.findViewById(R.id.his_date);
-            state = (MaqueeTextView) view.findViewById(R.id.his_state);
         }
     }
 

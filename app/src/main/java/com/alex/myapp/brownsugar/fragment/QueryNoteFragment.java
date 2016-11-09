@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.alex.myapp.brownsugar.R;
-import com.alex.myapp.brownsugar.adapter.HistoryAdapter;
-import com.alex.myapp.brownsugar.model.DateModel;
+import com.alex.myapp.brownsugar.adapter.NoteAdapter;
+import com.alex.myapp.brownsugar.model.NoteModel;
 import com.alex.myapp.brownsugar.util.AppUtils;
 import com.alex.myapp.brownsugar.util.DividerItemDecoration;
 
@@ -23,10 +23,10 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * to handle interaction events.
- * Use the {@link HistoryFragment#newInstance} factory method to
+ * Use the {@link QueryNoteFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HistoryFragment extends Fragment {
+public class QueryNoteFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -39,14 +39,13 @@ public class HistoryFragment extends Fragment {
     private RecyclerView rv;
     private FloatingActionButton fab;
     private View view;
-    private HistoryAdapter adapter;
-    private static List<DateModel> mList;
+    private NoteAdapter adapter;
+    private static List<NoteModel> mList;
     String TAG="TAG";
 
-    private String his_start="",his_end="";
-    private int his_pos=0;
+    private String his_start="",his_end="",his_subject="";
 
-    public HistoryFragment() {
+    public QueryNoteFragment() {
         // Required empty public constructor
     }
 
@@ -58,8 +57,8 @@ public class HistoryFragment extends Fragment {
      * @return A new instance of fragment AboutFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HistoryFragment newInstance(List<DateModel> list) {
-        HistoryFragment fragment = new HistoryFragment();
+    public static QueryNoteFragment newInstance(List<NoteModel> list) {
+        QueryNoteFragment fragment = new QueryNoteFragment();
         mList=list;
         return fragment;
     }
@@ -73,7 +72,7 @@ public class HistoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view=inflater.inflate(R.layout.fragment_history, container, false);
+        view=inflater.inflate(R.layout.fragment_query_note, container, false);
 
         //初始化数据
         initData();
@@ -90,23 +89,21 @@ public class HistoryFragment extends Fragment {
 
         rv= (RecyclerView) view.findViewById(R.id.rv_his);
         fab= (FloatingActionButton) view.findViewById(R.id.his_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                SettingNoteFragment fragment=SettingNoteFragment.newInstance(getActivity(),his_start,his_end,his_subject);
+                fragment.show(getActivity().getFragmentManager(),"tag");
+
+            }
+        });
 
         if (mList==null){
             mList=new ArrayList<>();
         }
 
-//        List<DateModel> list=new ArrayList<>();
-//        for (int i=0;i<20;i++){
-//            DateModel model=new DateModel();
-//            model.setCid("0000000000"+i);
-//            model.setDate("2016-11-"+i);
-//            model.setState(i%2+1);
-//            list.add(model);
-//
-//        }
-
-
-        adapter=new HistoryAdapter(mList,getActivity());
+        adapter=new NoteAdapter(mList,getActivity());
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
         rv.setAdapter(adapter);
         rv.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
@@ -114,32 +111,26 @@ public class HistoryFragment extends Fragment {
     }
     private void  initEvent(){
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                SettingHistoryFragment fragment= SettingHistoryFragment.newInstance(getActivity(),his_start,his_end,his_pos);
+        adapter.setOnItemClickLitener(new NoteAdapter.OnItemClickLitener() {
+            @Override
+            public void onItemClick(View view, NoteModel model, int pos) {
+                NoteDetailFragment fragment=NoteDetailFragment.newInstance(model);
                 fragment.show(getActivity().getFragmentManager(),"tag");
-
-            }
-        });
-
-        adapter.setOnItemClickLitener(new HistoryAdapter.OnItemClickLitener() {
-            @Override
-            public void onItemClick(View view, DateModel model, int pos) {
             }
         });
 
 
     }
 
-    public void QueryHistoryComplete(int state, String start, String end,List<DateModel> list){
-        his_pos=state;
+    public void SettingNoteComplete(String subject, String start, String end,List<NoteModel> list){
+        his_subject=subject;
         his_start=start;
         his_end=end;
         if (list==null||list.size()<1){
             AppUtils.showToast(getActivity(),"所选条件下，无任何数据记录!");
         }
+
         adapter.changeData(list);
     }
 
