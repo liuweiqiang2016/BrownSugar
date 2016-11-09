@@ -162,9 +162,13 @@ public class MainActivity extends AppCompatActivity
             mHandler.sendEmptyMessageDelayed(4, 250);
 
         } else if (id == R.id.nav_setting) {
-            if (settingFragment==null){
-                settingFragment=SettingFragment.newInstance("","");
+            PersonModel model=db.findFirst(Selector.from(PersonModel.class).where("C_CID", "=", "personId"));
+            String cycle="28",last="5";
+            if (model!=null){
+                cycle=model.getCycle()+"";
+                last=model.getLast()+"";
             }
+            settingFragment=SettingFragment.newInstance(cycle,last,db);
             replaceFragment(item.getTitle().toString(), settingFragment);
 
 

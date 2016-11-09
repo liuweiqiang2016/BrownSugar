@@ -5,9 +5,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.alex.myapp.brownsugar.R;
+import com.alex.myapp.brownsugar.model.PersonModel;
+import com.alex.myapp.brownsugar.util.AppUtils;
+import com.zeone.framework.db.sqlite.DbUtils;
+import com.zeone.framework.db.sqlite.Selector;
 
 
 /**
@@ -26,7 +32,9 @@ public class SettingFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private TextView tv;
+    private EditText et_cycle,et_last;
+    private Button btn;
+    private static DbUtils mdb;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -41,11 +49,12 @@ public class SettingFragment extends Fragment {
      * @return A new instance of fragment AboutFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SettingFragment newInstance(String param1, String param2) {
+    public static SettingFragment newInstance(String param1, String param2,DbUtils db) {
         SettingFragment fragment = new SettingFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
+        mdb=db;
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,6 +73,33 @@ public class SettingFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_setting, container, false);
+        et_cycle= (EditText) view.findViewById(R.id.set_et_cycle);
+        et_last= (EditText) view.findViewById(R.id.set_et_last);
+
+        et_cycle.setText(mParam1);
+        et_last.setText(mParam2);
+
+        btn= (Button) view.findViewById(R.id.set_save);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (et_cycle.getText().toString().trim().equals("")){
+                    AppUtils.showToast(getActivity(),"月经周期必填!");
+                    return;
+                }
+                if (et_last.getText().toString().trim().equals("")){
+                    AppUtils.showToast(getActivity(),"持续时间必填!");
+                    return;
+                }
+                PersonModel model=mdb.findFirst(Selector.from(PersonModel.class).where("C_CID", "=", "personId"));
+                model.setCycle(Integer.parseInt(et_cycle.getText().toString().trim()));
+                model.setLast(Integer.parseInt(et_last.getText().toString().trim()));
+                mdb.update(model);
+                AppUtils.showToast(getActivity(),"保存成功!");
+
+            }
+        });
+
         return view;
     }
 

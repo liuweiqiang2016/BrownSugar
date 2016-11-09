@@ -143,7 +143,25 @@ public class FutureFragment extends Fragment {
             //add本月的危险期预测
             String f_data=AppUtils.getDataByCount(model.getDate(),AppUtils.getCycle(db));
             risk.addAll(AppUtils.getRiskData(db,f_data,model.getState()));
+            //本月经期开始时间和接时间
+            String s_data="";
+            String e_data="";
+            if (model.getState()==1){
+                s_data=AppUtils.getDataByCount(model.getDate(),AppUtils.getCycle(db));
+                e_data=AppUtils.getDataByCount(model.getDate(),AppUtils.getCycle(db)+AppUtils.getLast(db));
+            }else {
+                s_data=AppUtils.getDataByCount(model.getDate(),AppUtils.getCycle(db)-AppUtils.getLast(db));
+                e_data=AppUtils.getDataByCount(model.getDate(),AppUtils.getCycle(db));
+            }
             for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).getDate().equals(s_data)){
+                    list.get(i).setState(1);
+                    list.get(i).setColor(AppUtils.getColorByState(getActivity(),1));
+                }
+                if (list.get(i).getDate().equals(e_data)){
+                    list.get(i).setState(2);
+                    list.get(i).setColor(AppUtils.getColorByState(getActivity(),2));
+                }
                 //所有在本月的经期记录上色
                 for (int j = 0; j < mList.size(); j++) {
                     if (mList.get(j).getDate().equals(list.get(i).getDate())){
@@ -158,8 +176,11 @@ public class FutureFragment extends Fragment {
                         list.get(i).setColor(AppUtils.getColorByState(getActivity(),3));
                     }
                 }
+                //本月经期开始、结束上色
 
             }
+
+
 
         }
 

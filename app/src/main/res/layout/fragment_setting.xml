@@ -1,81 +1,112 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:layout_height="match_parent">
 
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        >
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/set_cycle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="月经周期:" />
-        <EditText
-            android:id="@+id/set_et_cycle"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:textSize="16sp"
-            android:hint="必填"
-            android:inputType="number"
-            android:layout_toRightOf="@+id/set_cycle"
-            />
-    </RelativeLayout>
+            android:layout_margin="8dp">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        >
+            <TextView
+                android:id="@+id/set_cycle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="月经周期:" />
 
-        <TextView
-            android:id="@+id/set_last"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="持续时间:" />
-        <EditText
-            android:id="@+id/set_et_last"
+            <EditText
+                android:id="@+id/set_et_cycle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/set_cycle"
+                android:hint="必填"
+                android:inputType="number"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:textSize="16sp"
-            android:inputType="number"
-            android:hint="必填"
-            android:layout_toRightOf="@+id/set_last"
-            />
-    </RelativeLayout>
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        >
-        <Button
-            android:id="@+id/btn_note"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/set_last"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="持续时间:" />
+
+            <EditText
+                android:id="@+id/set_et_last"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/set_last"
+                android:hint="必填"
+                android:inputType="number"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="保存" />
-    </RelativeLayout>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="3dp"
-        android:gravity="center_horizontal"
-        android:text="编辑时间查询区间"
-        />
+            android:layout_margin="5dp">
+
+            <Button
+                android:id="@+id/set_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="保存" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1、月经周期系统默认为28天，月经持续时间系统默认为5天" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginTop="1dp"
+                android:text="2、输入框展示的数据为：上次用户设置的数据" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:text="3、危险期的计算公式为：（下次经期初潮时间-14）-5至（下次经期初潮时间-14）+4，该段时间为危险期" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:text="4、固定的月经周期及持续时间，可以更准确的预测危险期" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:text="5、由于不同用户存在不同的生理差异，危险期预测仅供参考，为了您的生理健康，请务必注意安全措施" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 
-
-</LinearLayout>
+</FrameLayout>
