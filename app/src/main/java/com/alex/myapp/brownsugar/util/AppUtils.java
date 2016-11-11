@@ -1,9 +1,17 @@
 package com.alex.myapp.brownsugar.util;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.NavigationView;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.alex.myapp.brownsugar.R;
@@ -12,6 +20,10 @@ import com.alex.myapp.brownsugar.model.PersonModel;
 import com.zeone.framework.db.sqlite.DbUtils;
 import com.zeone.framework.db.sqlite.Selector;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -411,6 +423,233 @@ public class AppUtils {
             return true;
         }
     }
+
+    /**
+     2  * 获取版本号
+     3  * @return 当前应用的版本号
+     4  */
+    public static String getVersion(Context context) {
+        try {
+            PackageManager manager = context.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
+            String version = info.versionName;
+            return version;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "1.0";
+        }
+    }
+
+    /**
+     * 解析SDcard xml文件
+     * @param fileName
+     * @return 返回xml文件的inputStream
+     */
+    public static InputStream getInputStreamFromSDcard(String fileName){
+        try {
+            // 路径根据实际项目修改
+            String path =APP_DIR + "/";
+
+            Log.v("", "path : " + path);
+
+            File xmlFlie = new File(path+fileName);
+
+            InputStream inputStream = new FileInputStream(xmlFlie);
+
+            return inputStream;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 比较软件当前版本与服务器最新版本
+     *
+     * @param localVersion
+     *            软件当前版本为四位 如：1.0.0.0
+     * @param serviceVersion
+     *            服务器最新版本 为四位 如：1.0.11.2
+     * @return
+     */
+    public static boolean compareVersion(String localVersion, String serviceVersion)
+    {
+        try
+        {
+            localVersion = localVersion.replace(".", ",");
+            serviceVersion = serviceVersion.replace(".", ",");
+
+            String[] local = localVersion.trim().split(",");
+            String[] service = serviceVersion.trim().split(",");
+            if (local.length != service.length)
+                return false;
+            for (int i = 0; i < local.length; i++)
+            {
+                int lv = Integer.valueOf(local[i]);
+                int sv = Integer.valueOf(service[i]);
+                if (lv == sv)
+                    continue;
+                if (lv < sv)
+                    return true;
+                else
+                    return false;
+
+            }
+            return false;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+    }
+
+    /**
+     * 检测当的网络（WLAN、3G/2G）状态
+     * @param context Context
+     * @return true 表示网络可用
+     */
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivity = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getActiveNetworkInfo();
+            if (info != null && info.isConnected())
+            {
+                // 当前网络是连接的
+                if (info.getState() == NetworkInfo.State.CONNECTED)
+                {
+                    // 当前所连接的网络可用
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 安装APK文件
+     */
+    public static void installApk(Context context) {
+        File apkfile = new File(APP_DIR,APP_DOWNFILE_NAME);
+        if (!apkfile.exists()) {
+            return;
+        }
+        // 通过Intent安装APK文件
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setDataAndType(Uri.parse("file://" + apkfile.toString()), "application/vnd.android.package-archive");
+        context.startActivity(intent);
+    }
+
+    /**
+     * 检查版本时间是否超过一小时
+     *
+     * @param time 版本数据时间
+     * @return true 表示超过一小时
+     */
+    public static boolean checkUpdateTime(String time) {
+        try {
+            long cur=System.currentTimeMillis();
+            long value=1*60*60*1000;//一小时毫秒数
+            if(cur-Long.parseLong(time)>=value){
+                return true;
+            }else{
+                return false;
+            }
+        }catch (Exception e){
+
+        }
+        return false;
+    }
+
+    /**
+     * 检查文件是否存在
+     *
+     * @param fileName 文件名称
+     * @return true 表示文件存在
+     */
+    public static boolean checkFileState(String fileName) {
+
+        File file = new File(APP_DIR,fileName);
+        if (file.exists()) {
+            return true;
+        }else {
+            return false;
+        }
+    }
+    /**
+     * 返回apk文件版本号
+     *
+     * @param context 文件名称
+     * @return version apk文件版本号
+     */
+    public static String apkCode(Context context){
+
+        String archiveFilePath=APP_DIR+APP_DOWNFILE_NAME;//安装包路径
+//      String archiveFilePath="sdcard/DangDang.apk";//安装包路径
+        String version="";
+        PackageManager pm = context.getPackageManager();
+        PackageInfo info = pm.getPackageArchiveInfo(archiveFilePath, PackageManager.GET_ACTIVITIES);
+        if(info != null){
+            version=info.versionName;       //得到版本信息
+//            ApplicationInfo appInfo = info.applicationInfo;
+//            String appName = pm.getApplicationLabel(appInfo).toString();
+//            String packageName = appInfo.packageName;  //得到安装包名称
+//             version=info.versionName;       //得到版本信息
+//            Toast.makeText(TestActivity.this, , Toast.LENGTH_LONG).show();
+//            Drawable icon = pm.getApplicationIcon(appInfo);//得到图标信息
+//            TextView tv = (TextView)findViewById(R.id.tv);
+//            tv.setText("appName:"+appName+"---packageName:"+packageName);
+//            //显示图标
+//            ImageView tu=(ImageView)findViewById(R.id.imageView1);
+//            tu.setBackgroundDrawable(icon);
+        }
+        return version;
+    }
+
+    /**
+     * 分享功能
+     *
+     * @param context
+     *            上下文
+     * @param activityTitle
+     *            Activity的名字
+     * @param msgTitle
+     *            消息标题
+     * @param msgText
+     *            消息内容
+     * @param imgPath
+     *            图片路径，不分享图片则传null
+     */
+    public static void shareMsg(Context context,String activityTitle, String msgTitle, String msgText,
+                         String imgPath) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        if (imgPath == null || imgPath.equals("")) {
+            intent.setType("text/plain"); // 纯文本
+        } else {
+            File f = new File(imgPath);
+            if (f != null && f.exists() && f.isFile()) {
+                intent.setType("image/jpg");
+                Uri u = Uri.fromFile(f);
+                intent.putExtra(Intent.EXTRA_STREAM, u);
+            }
+        }
+        intent.putExtra(Intent.EXTRA_SUBJECT, msgTitle);
+        intent.putExtra(Intent.EXTRA_TEXT, msgText);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(Intent.createChooser(intent, activityTitle));
+    }
+
+    //退出应用
+    public static void exitAPP(Activity activity){
+
+        //退出
+        activity.finish();
+        System.exit(0);
+        android.os.Process.killProcess(android.os.Process.myPid());
+
+    }
+
 
 
 }

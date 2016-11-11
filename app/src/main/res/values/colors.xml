@@ -24,4 +24,9 @@
     <color name="user_icon_8">#ffff5722</color><!-- deep orange 500 -->
 
     <color name="color_bg">#F2F2F2</color>
+
+    <color name="red">#FFC93437</color>
+    <color name="blue">#FF375BF1</color>
+    <color name="yellow">#FFF7D23E</color>
+    <color name="green">#FF34A350</color>
 </resources>
