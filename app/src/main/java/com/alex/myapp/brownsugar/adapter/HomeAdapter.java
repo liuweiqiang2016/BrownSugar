@@ -15,26 +15,19 @@ import com.alex.myapp.brownsugar.R;
 import com.alex.myapp.brownsugar.model.DateModel;
 import com.alex.myapp.brownsugar.util.AppUtils;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> {
 
-    //	private List<String> mDatas;
     private LayoutInflater mInflater;
     private Context mContext;
 
-//    private List<String> mList;
-    private List<Integer> mColors;
-    private int mStart = -1, mEnd = -1;
-
-    private List<DateModel> mList;
+    private List<DateModel> mList=new ArrayList<>();
 
     public interface OnItemClickLitener {
-//        void onItemClick(View view, int position,String day,boolean isCurrent,int start,int end,int total);
-
-//        void onItemLongClick(View view, int position);
 
         void onItemClick(View view,DateModel model,int pos);
     }
@@ -48,7 +41,9 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
 
     public HomeAdapter(Context context, List<DateModel> list) {
         mContext = context;
-        mList=list;
+        if (list!=null){
+            mList=list;
+        }
     }
 
     @Override
@@ -71,29 +66,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
         holder.rl.setBackgroundResource(R.drawable.item_bg);
         holder.tv.setTextColor(mList.get(position).getColor());
 
-//        if (position < 7) {
-//            holder.tv.setTextColor(mContext.getResources().getColor(R.color.black));
-//            TextPaint tp = holder.tv.getPaint();
-//            tp.setFakeBoldText(true);
-//        } else {
-//
-//            holder.rl.setBackgroundResource(R.drawable.item_bg);
-//
-//            if (position > mStart && position < mEnd) {
-//                holder.tv.setTextColor(mContext.getResources().getColor(R.color.black));
-//                if (position == mPos) {
-//                    holder.tv.setTextColor(mContext.getResources().getColor(R.color.date_today));
-//                }
-//            } else {
-//                holder.tv.setTextColor(mContext.getResources().getColor(R.color.darker_gray));
-//            }
-//        }
-
-
-//        if (position < 7) {
-//            TextPaint tp = holder.tv.getPaint();
-//            tp.setFakeBoldText(true);
-//        }else{// 如果设置了回调，则设置点击事件
         if (mOnItemClickLitener != null) {
             holder.itemView.setOnClickListener(new OnClickListener() {
                 @Override
@@ -102,16 +74,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
 
                     mOnItemClickLitener.onItemClick(holder.itemView,mList.get(pos),pos);
 
-//                    boolean isCurrent=false;
-//                    if (pos > mStart && pos < mEnd) {
-//                        isCurrent=true;
-//                    }
-//                    mOnItemClickLitener.onItemClick(holder.itemView, pos,mList.get(position),isCurrent,mStart,mEnd,mList.size());
                 }
             });
-//            holder.rl.setBackgroundResource(R.drawable.item_bg);
-//        }
-//        holder.tv.setTextColor(mColors.get(position));
 
 
         }
@@ -129,33 +93,9 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
         notifyItemInserted(position);
     }
 
-//    public void upData(int position, int total) {
-//        //mDatas.add(position, "Insert One");
-//        mTotal = total;
-//        notifyItemChanged(position);
-//    }
-    public void upData(int pos) {
-        //mDatas.add(position, "Insert One");
-//        mTotal = total;
-        notifyItemChanged(pos);
-    }
-
-    public void upData(int pos,int count) {
-        //mDatas.add(position, "Insert One");
-//        mTotal = total;
-//        notifyItemChanged(position);
-        notifyItemRangeChanged(pos,count);
-    }
-
-
-    public void removeData(int position) {
-        //mDatas.remove(position);
-        notifyItemRemoved(position);
-    }
-
     class MyViewHolder extends ViewHolder {
 
-        TextView tv, total;
+        TextView tv;
         RelativeLayout rl;
 
         public MyViewHolder(View view) {

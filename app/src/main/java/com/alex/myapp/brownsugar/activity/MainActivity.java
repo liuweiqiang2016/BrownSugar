@@ -1,9 +1,11 @@
 package com.alex.myapp.brownsugar.activity;
 
+import android.Manifest;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -39,6 +41,10 @@ import com.alex.myapp.brownsugar.util.MyDbUtils;
 import com.alex.myapp.brownsugar.util.ParseXMLUtils;
 import com.zeone.framework.db.sqlite.DbUtils;
 import com.zeone.framework.db.sqlite.Selector;
+import com.zhy.m.permission.MPermissions;
+import com.zhy.m.permission.PermissionDenied;
+import com.zhy.m.permission.PermissionGrant;
+import com.zhy.m.permission.ShowRequestPermissionRationale;
 
 import java.io.InputStream;
 import java.util.Calendar;
@@ -70,11 +76,14 @@ public class MainActivity extends AppCompatActivity
 
     //判断是否在下载apk文件
     private boolean isDowning = false;
+    private static final int REQUECT_CODE_SDCARD = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //检查权限
+        checkPermission();
         //初始化数据
         initData();
         //初始化布局
@@ -82,6 +91,39 @@ public class MainActivity extends AppCompatActivity
         //绑定事件
         initEvent();
 
+    }
+
+    void checkPermission() {
+
+        if (!MPermissions.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE, REQUECT_CODE_SDCARD)) {
+            MPermissions.requestPermissions(MainActivity.this, REQUECT_CODE_SDCARD, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+    }
+
+    ;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        MPermissions.onRequestPermissionsResult(MainActivity.this, requestCode, permissions, grantResults);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @ShowRequestPermissionRationale(REQUECT_CODE_SDCARD)
+    public void whyNeedSdCard() {
+        AppUtils.showToast(this, "APP存储数据到手机内存中，需要手机内存读写权限!");
+        MPermissions.requestPermissions(MainActivity.this, REQUECT_CODE_SDCARD, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+    }
+
+    @PermissionGrant(REQUECT_CODE_SDCARD)
+    public void requestSdcardSuccess() {
+        //Toast.makeText(this, "GRANT ACCESS SDCARD!", Toast.LENGTH_SHORT).show();
+    }
+
+    @PermissionDenied(REQUECT_CODE_SDCARD)
+    public void requestSdcardFailed() {
+        AppUtils.showToast(this, "APP存储数据到手机内存中，需要手机内存读写权限!");
     }
 
     private void initData() {

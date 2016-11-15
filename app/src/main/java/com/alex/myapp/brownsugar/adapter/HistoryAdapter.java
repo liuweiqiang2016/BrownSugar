@@ -34,7 +34,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
     }
 
     public HistoryAdapter(List<DateModel> mList, Context mContext) {
-        this.mList = mList;
+//        this.mList = mList;
+        if (mList!=null){
+            this.mList=mList;
+        }
         this.mContext = mContext;
     }
 
@@ -80,7 +83,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
 
     @Override
     public int getItemCount() {
-        return mList.size();
+        if (mList!=null){
+            return mList.size();
+        }
+        return 0;
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder

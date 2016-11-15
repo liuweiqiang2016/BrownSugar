@@ -34,7 +34,9 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
     }
 
     public NoteAdapter(List<NoteModel> mList, Context mContext) {
-        this.mList = mList;
+        if (mList!=null){
+            this.mList = mList;
+        }
         this.mContext = mContext;
     }
 
@@ -73,7 +75,10 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
 
     @Override
     public int getItemCount() {
-        return mList.size();
+        if (mList!=null){
+            return mList.size();
+        }
+        return 0;
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder
