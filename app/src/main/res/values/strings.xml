@@ -6,7 +6,8 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-
+    <string name="app_about_content">红糖是一款关注女性生理健康的app，旨在帮助用户更好的工作和生活。在您使用的过程中，如遇到任何问题或对应用有新的建议，欢迎发邮件给我，非常感谢您的使用!</string>
+    <string name="share_content">我正在使用红糖，这款应用对我有很大帮助，你也快来试试吧!详情：http://shouji.baidu.com/software/10176629.html</string>
     <string-array name="array_weeks">
         <item>日</item>
         <item>一</item>
@@ -35,6 +36,29 @@
         <item>@color/yellow</item>
         <item>@color/green</item>
     </integer-array>
+
+    <string-array name="about_dev">
+        <item>开发者</item>
+        <item>资料</item>
+        <item>邮箱</item>
+        <item>捐赠</item>
+    </string-array>
+
+    <string-array name="about_dev_info">
+        <item>liuweiqiang</item>
+        <item>https://github.com/liuweiqiang2016</item>
+        <item>liu.weiqiang@foxmail.com</item>
+        <item>如果您认为本app对您有很大帮助，且您有富余的钱财，欢迎向我捐赠，衷心感谢您的援助。</item>
+    </string-array>
+    <string-array name="about_thank_links">
+        <item>https://github.com/wyouflf/xUtils</item>
+        <item>https://github.com/square/okhttp</item>
+        <item>https://github.com/PhilJay/MPAndroidChart</item>
+        <item>https://github.com/jpardogo/GoogleProgressBar</item>
+        <item>https://github.com/daimajia/NumberProgressBar</item>
+        <item>https://github.com/hongyangAndroid/MPermissions</item>
+        <item>https://github.com/konifar/android-material-design-icon-generator-plugin</item>
+    </string-array>
 
 
 </resources>

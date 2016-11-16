@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity
     private QueryNoteFragment queryNoteFragment;
     private SettingFragment settingFragment;
     private CheckVersionFragment checkFragment;
+    private AboutFragment aboutFragment;
 
     private int year, month, day;
     private DbUtils db;
@@ -241,16 +242,16 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_share) {
 
-            AppUtils.shareMsg(this,"分享好友","分享","内容。。。。。。。。。。。",null);
+            AppUtils.shareMsg(this,"分享好友","分享",getString(R.string.share_content),null);
 
 
         } else if (id == R.id.nav_about) {
+            mHandler.sendEmptyMessageDelayed(12, 250);
+
 
         } else if (id == R.id.nav_exit) {
 
             AppUtils.exitAPP(MainActivity.this);
-
-
         }
         return true;
     }
@@ -442,9 +443,11 @@ public class MainActivity extends AppCompatActivity
                     checkVersionInfo(true);
                     break;
                 case 12:
+                    if (aboutFragment==null){
+                        aboutFragment=AboutFragment.newInstance();
+                    }
+                    replaceFragment("关于", aboutFragment);
                     break;
-
-
             }
 
         }
