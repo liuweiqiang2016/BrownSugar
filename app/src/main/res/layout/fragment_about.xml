@@ -17,7 +17,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_free_breakfast_red_a200_48dp"
+            android:src="@drawable/ic_app_48dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="3dp"
             />

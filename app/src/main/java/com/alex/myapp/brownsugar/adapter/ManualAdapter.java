@@ -34,6 +34,9 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.MyViewHold
     public void onBindViewHolder(final MyViewHolder holder,final int position) {
 
         holder.title.setText(mTitles[position]);
+        if (position==0){
+            holder.content.setTextColor(mContext.getResources().getColor(R.color.black));
+        }
         holder.content.setText(mContents[position]);
     }
 
