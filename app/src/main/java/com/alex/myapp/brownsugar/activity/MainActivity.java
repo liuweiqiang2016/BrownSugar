@@ -242,6 +242,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_share) {
 
+            //详情：http://shouji.baidu.com/software/10176629.html
             AppUtils.shareMsg(this,"分享好友","分享",getString(R.string.share_content),null);
 
 
