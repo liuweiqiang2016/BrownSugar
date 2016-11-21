@@ -11,6 +11,23 @@ import com.zeone.framework.db.annotation.Table;
 public class VersionModel {
     private int id;
 
+    //版本号
+    @Column(column="C_Code")
+    private String code;
+    //更新时间
+    @Column(column="C_Time")
+    private String time;
+    //详情link（分享使用）
+    @Column(column="C_Share")
+    private String share;
+
+    public String getShare() {
+        return share;
+    }
+
+    public void setShare(String share) {
+        this.share = share;
+    }
     public String getTime() {
         return time;
     }
@@ -26,12 +43,4 @@ public class VersionModel {
     public void setCode(String code) {
         this.code = code;
     }
-
-    //版本号
-    @Column(column="C_Code")
-    private String code;
-    //更新时间
-    @Column(column="C_Time")
-    private String time;
-
 }

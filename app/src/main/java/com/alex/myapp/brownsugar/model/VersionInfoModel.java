@@ -14,6 +14,7 @@ public class VersionInfoModel {
 	private String des;
 	//下载地址
 	private String link;
+	private String share_link;
 	public String getCode() {
 		return code;
 	}
@@ -49,6 +50,13 @@ public class VersionInfoModel {
 	}
 	public void setCode_old(String code_old) {
 		this.code_old = code_old;
+	}
+	public String getShare_link() {
+		return share_link;
+	}
+
+	public void setShare_link(String share_link) {
+		this.share_link = share_link;
 	}
 	
 

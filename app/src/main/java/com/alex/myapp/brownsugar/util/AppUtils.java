@@ -39,7 +39,7 @@ public class AppUtils {
 
     public static final String APP_DIR = Environment.getExternalStorageDirectory() + "/BrownSugar/";
     public static final String APP_DBNAME = "BSDB";
-    public static final String APP_UPDATE_URL = "https://raw.githubusercontent.com/liuweiqiang2016/Business-Assistant/master/app/versioninfo.xml";
+    public static final String APP_UPDATE_URL = "https://raw.githubusercontent.com/liuweiqiang2016/BrownSugar/master/app/versioninfo.xml";
     public static final String APP_DOWNFILE_NAME = "BrownSugar.apk";
     public static final String APP_XML_NAME = "versioninfo.xml";
 

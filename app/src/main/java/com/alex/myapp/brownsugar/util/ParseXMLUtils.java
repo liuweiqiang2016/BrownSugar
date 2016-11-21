@@ -81,6 +81,9 @@ public class ParseXMLUtils {
 						eventType = parser.next();
 						// book.setId(Integer.parseInt(parser.getText()));
 						version.setLink(parser.getText());
+					}else if (parser.getName().equals("sharelink")) {
+						eventType = parser.next();
+						version.setShare_link(parser.getText());
 					}
 					break;
 

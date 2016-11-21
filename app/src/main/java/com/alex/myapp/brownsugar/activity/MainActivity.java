@@ -242,9 +242,22 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_share) {
 
-            //详情：http://shouji.baidu.com/software/10176629.html
-            AppUtils.shareMsg(this,"分享好友","分享",getString(R.string.share_content),null);
+            //分享软件前，查看详情链接是否存在
+            List<VersionModel> modelList;
+            modelList = db.findAll(Selector.from(VersionModel.class));
+            if (modelList != null && modelList.size() > 1) {
+                //没有sharelink默认为-1
+                VersionModel model=modelList.get(0);
+                if (model!=null&&!model.getShare().equals("-1")){
+                    AppUtils.shareMsg(this,"分享好友","分享",getString(R.string.share_content)+"详情:"+model.getShare(),null);
 
+                }else {
+                    AppUtils.shareMsg(this,"分享好友","分享",getString(R.string.share_content),null);
+                }
+
+            }else {
+                AppUtils.shareMsg(this,"分享好友","分享",getString(R.string.share_content),null);
+            }
 
         } else if (id == R.id.nav_about) {
             mHandler.sendEmptyMessageDelayed(12, 250);
@@ -362,6 +375,7 @@ public class MainActivity extends AppCompatActivity
                                 VersionModel model = new VersionModel();
                                 model.setCode(versionInfoModel.getCode());
                                 model.setTime(System.currentTimeMillis() + "");
+                                model.setShare(versionInfoModel.getShare_link());
                                 db.save(model);
                             } else {
                                 //存在版本数据，更新该条数据
