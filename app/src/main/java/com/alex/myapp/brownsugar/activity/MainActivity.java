@@ -245,7 +245,7 @@ public class MainActivity extends AppCompatActivity
             //分享软件前，查看详情链接是否存在
             List<VersionModel> modelList;
             modelList = db.findAll(Selector.from(VersionModel.class));
-            if (modelList != null && modelList.size() > 1) {
+            if (modelList != null && modelList.size() >=1) {
                 //没有sharelink默认为-1
                 VersionModel model=modelList.get(0);
                 if (model!=null&&!model.getShare().equals("-1")){
@@ -262,24 +262,11 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_about) {
             mHandler.sendEmptyMessageDelayed(12, 250);
 
-
         } else if (id == R.id.nav_exit) {
 
             AppUtils.exitAPP(MainActivity.this);
         }
         return true;
-    }
-
-
-    private void aboutAPP(String title) {
-
-        AboutFragment fragment = new AboutFragment();
-        toolbar.setTitle(title);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, fragment)
-                .commit();
-        drawer.closeDrawers();
-
     }
 
 
@@ -381,6 +368,7 @@ public class MainActivity extends AppCompatActivity
                                 //存在版本数据，更新该条数据
                                 modelList.get(0).setCode(versionInfoModel.getCode());
                                 modelList.get(0).setTime(System.currentTimeMillis() + "");
+                                modelList.get(0).setShare(versionInfoModel.getShare_link());
                                 db.update(modelList.get(0));
                             }
 
